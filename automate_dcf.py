@@ -86,19 +86,10 @@ def project_fcf(fcf_series, years=5, growth_rate=0.07):
     return [last_fcf * (1 + growth_rate) ** i for i in range(1, years + 1)]
 
 def perform_dcf(fcf_series, projected_fcfs, discount_rate=0.10, terminal_growth=0.025):
-    # First, discount the historical FCFs (from fcf_series)
     discounted_fcfs = [fcf / (1 + discount_rate) ** i for i, fcf in enumerate(fcf_series, start=1)]
-    
-    # Then, discount the projected FCFs
     discounted_projected_fcfs = [fcf / (1 + discount_rate) ** i for i, fcf in enumerate(projected_fcfs, start=len(fcf_series) + 1)]
-    
-    # Calculate terminal value
     terminal_value = projected_fcfs[-1] * (1 + terminal_growth) / (discount_rate - terminal_growth)
-    
-    # Discount the terminal value to present value
     discounted_terminal = terminal_value / (1 + discount_rate) ** len(projected_fcfs)
-    
-    # Add up all the discounted values
     enterprise_value = sum(discounted_fcfs) + sum(discounted_projected_fcfs) + discounted_terminal
     
     return enterprise_value
